@@ -77,7 +77,7 @@ int get_valid_output_format(output_format) {
 }
 
 /* {{{ proto string markdown_parse(string input [, int flags, int output_format ])
-   Convert Markdown string to another string */
+   Convert Markdown string to string of another format */
 PHP_FUNCTION(markdown_parse) {
   char *input;
   int input_len;
@@ -93,6 +93,8 @@ PHP_FUNCTION(markdown_parse) {
   RETURN_STRING(markdown_to_string(input, flags, output_format), 1);
 }
 
+/* {{{ proto string markdown_parse_file(string filename [, int flags, int output_format ])
+   Convert Markdown file contents to string */
 PHP_FUNCTION(markdown_parse_file) {
   php_stream *stream;
   char *filename;
