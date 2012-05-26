@@ -88,7 +88,7 @@ PHP_FUNCTION(markdown_parse) {
     RETURN_NULL();
   }
 
-  output_format = get_valid_output_format();
+  output_format = get_valid_output_format(output_format);
 
   RETURN_STRING(markdown_to_string(input, flags, output_format), 1);
 }
@@ -112,7 +112,7 @@ PHP_FUNCTION(markdown_parse_file) {
     RETURN_NULL();
   }
 
-  output_format = get_valid_output_format();
+  output_format = get_valid_output_format(output_format);
   stream = php_stream_open_wrapper_ex(filename, "rb", 0 | REPORT_ERRORS, NULL, NULL);
 
   if (!stream) {
