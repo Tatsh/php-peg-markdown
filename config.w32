@@ -1,0 +1,12 @@
+// kate hl: JavaScript
+
+ARG_ENABLE("markdown", "markdown support", "no");
+if (PHP_MARKDOWN == "yes") {
+  AC_DEFINE('HAVE_MARKDOWN', 1, "Whether you have Markdown support");
+
+  if (CHECK_LIB("glib-2.0")) {
+    var PEG_MARKDOWN_SOURCES = "peg-markdown/markdown_lib.c peg-markdown/markdown_output.c peg-markdown/markdown_parser.c";
+    var markdown_source = PEG_MARKDOWN_SOURCES + " php_markdown.c";
+    EXTENSION("markdown", markdown_source);
+  }
+}
