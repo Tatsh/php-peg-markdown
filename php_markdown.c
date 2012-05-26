@@ -66,7 +66,7 @@ PHP_MINFO_FUNCTION(markdown) {
   php_info_print_table_end();
 }
 
-int get_valid_output_format(output_format) {
+int get_valid_output_format(int output_format) {
   if (output_format != HTML_FORMAT &&
       output_format != LATEX_FORMAT &&
       output_format != GROFF_MM_FORMAT &&
