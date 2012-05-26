@@ -55,7 +55,6 @@ Like [JSON](http://php.net/manual/en/function.json-decode.php) and [YAML](http:/
 ## PHP Markdown comparison
 
 * [PHP Markdown](http://michelf.com/projects/php-markdown/) is based on John Gruber's Perl Markdown parser (which is slow) (by comparison, this extension is about 9-10x faster)
-* PHP Markdown is [GPL only](http://michelf.com/projects/php-markdown/license/) (which is silly for a library)
 * PHP Markdown uses a series of regular expressions instead of a grammar definition
 * PHP Markdown has PHP 4 crud (PHP 4 is long deprecated). Line 218 of `markdown.php`:
 
