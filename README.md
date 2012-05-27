@@ -18,6 +18,45 @@ sh ltinit-fix-make.sh
 
 From here, you can edit `php.ini` to specify the full path to the extension. Or you can place it in something like `/usr/lib/php5.3/lib/extensions/no-debug-zts-20090626`, but this is not recommended. Consult your distribution/OS documentation on the best way to install an extension.
 
+## Windows
+
+Follow instructions [here](https://wiki.php.net/internals/windows/stepbystepbuild) to set up your development environment. Make sure to install the Windows SDK *before* Visual Studio, update Windows through Windows Update, then install Visual Studio and all of its updates (this means SP1 for 2008).
+
+Just before step *13*, perform these commands (where *x* is the major version you are using):
+
+```batch
+cd C:\php-sdk\php5xdev\vc9\x86
+mkdir pecl
+cd pecl
+git clone git://github.com/Tatsh/php-peg-markdown.git markdown
+cd ..\..\php-5.x-xyz
+```
+
+When specifying your compile line, use `--enable-markdown` to enable this extension.
+
+Before you can build you need Glib dependencies:
+
+1. Download the Glib development package from [GTK's site](http://www.gtk.org)
+2. Extract the package to C:\php-sdk\php5xdev\vc9\x86\deps
+
+1. Download the run-time Gettext run-time package from GTK's site
+2. Extract the package to C:\php-sdk\php5xdev\vc9\x86\deps
+
+Now you can build, but you will not be able to run `nmake snap` yet.
+
+### Creating a Snapshot/Running `php.exe`
+
+Before you can run `nmake snap` you need to put 2 DLLs into the `C:\php-sdk\php5xdev\vc9\x86\php-5.x-xyz\Release_TS` directory:
+
+* `intl.dll` (from gettext run-time package)
+* `libglib-2.0-0.dll` (from glib package)
+
+Both of these should be in `C:\php-sdk\php5xdev\vc9\x86\deps\bin`. `php.exe` cannot run without the above mentioned DLLs and is required to run the `phar` file which is run when a snapshot is built.
+
+Furthermore, you still need to add the aforementioned DLLs to the resulting zip file you intend to distribute. An easy way to do this is with a GUI app like 7-Zip's manager.
+
+This is a temporary workaround that will be fixed in a future version.
+
 # Usage
 
 Simple. Two functions and a few constants:
