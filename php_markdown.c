@@ -92,6 +92,7 @@ PHP_FUNCTION(markdown_parse) {
 
   RETURN_STRING(markdown_to_string(input, flags, output_format), 1);
 }
+/* }}} */
 
 /* {{{ proto string markdown_parse_file(string filename [, int flags, int output_format ])
    Convert Markdown file contents to string */
@@ -106,7 +107,6 @@ PHP_FUNCTION(markdown_parse_file) {
   long offset = -1;
   long maxlen = PHP_STREAM_COPY_ALL;
   char *decoded;
-  php_stream_context *context = NULL;
 
   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|ll", &filename, &filename_len, &flags, &output_format) == FAILURE) {
     RETURN_NULL();
@@ -127,8 +127,7 @@ PHP_FUNCTION(markdown_parse_file) {
 
   if ((len = php_stream_copy_to_mem(stream, &contents, maxlen, 0)) > 0) {
     decoded = markdown_to_string(contents, flags, output_format);
-    len = strlen(decoded);
-    RETVAL_STRINGL(decoded, len, 1);
+    RETVAL_STRING(decoded, 1);
   }
   else if (len == 0) {
     RETVAL_EMPTY_STRING();
@@ -139,3 +138,4 @@ PHP_FUNCTION(markdown_parse_file) {
 
   php_stream_close(stream);
 }
+/* }}} */
