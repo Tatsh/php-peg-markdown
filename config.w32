@@ -4,11 +4,11 @@ ARG_ENABLE("markdown", "markdown support", "no");
 if (PHP_MARKDOWN == "yes") {
   if (CHECK_LIB("glib-2.0.lib") && CHECK_HEADER_ADD_INCLUDE("glib.h", "CFLAGS_MARKDOWN", PHP_MARKDOWN + ";" + PHP_PHP_BUILD + "\\include\\glib-2.0")) {
     var PEG_MARKDOWN_SOURCES = "markdown_lib.c markdown_output.c markdown_parser.c";
-		ADD_SOURCES(configure_module_dirname + '\\peg-markdown', PEG_MARKDOWN_SOURCES, "markdown");
+    ADD_SOURCES(configure_module_dirname + '\\peg-markdown', PEG_MARKDOWN_SOURCES, "markdown");
     EXTENSION("markdown", "php_markdown.c");
     AC_DEFINE('HAVE_MARKDOWN', 1, "Whether you have Markdown support");
   }
   else {
     WARNING("markdown not enabled; libraries and headers not found");
-	}
+  }
 }
