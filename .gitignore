@@ -21,3 +21,4 @@ run-tests.php
 modules
 build
 .directory
+*.bak
