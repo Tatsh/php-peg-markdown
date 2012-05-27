@@ -1,3 +1,3 @@
 [Project]
-Manager=KDevCustomMakeManager
-Name=peg-markdown-php
+Manager=KDevGenericManager
+Name=php-peg-markdown
