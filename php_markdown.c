@@ -130,7 +130,7 @@ PHP_FUNCTION(markdown_parse_file) {
   long maxlen = PHP_STREAM_COPY_ALL;
   char *decoded;
 
-  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|ll", &filename, &filename_len, &flags, &output_format) == FAILURE) {
+  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "p|ll", &filename, &filename_len, &flags, &output_format) == FAILURE) {
     RETURN_NULL();
   }
 
