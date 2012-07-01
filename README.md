@@ -6,19 +6,32 @@ You can get it for Gentoo very easily for all your `PHP_TARGETS` (5.3 and 5.4) s
 
 https://github.com/tatsh/tatsh-overlay
 
-Once you have the overlay installed, simply `emerge dev-php/markdown`. You may need to unmask.
+Once you have the overlay installed, simply `emerge dev-php/markdown`. You may need to unmask a few packages.
 
 ## Others
 
 ```bash
+wget http://piumarta.com/software/peg/peg-0.1.9.tar.gz
+tar xvf peg-0.1.9.tar.gz
+cd peg-0.1.9
+make
+sudo make install
+
+git clone git://github.com/Tatsh/peg-markdown.git
+make
+sudo make install
+
 git clone git://github.com/tatsh/php-peg-markdown.git
 cd php-peg-markdown
 sh ltinit-fix-make.sh
+sudo make install
 ```
 
 From here, you can edit `php.ini` to specify the full path to the extension. Or you can place it in something like `/usr/lib/php5.3/lib/extensions/no-debug-zts-20090626`, but this is not recommended. Consult your distribution/OS documentation on the best way to install an extension.
 
 ## Windows
+
+**NOTE:** This is out of date.
 
 Follow instructions [here](https://wiki.php.net/internals/windows/stepbystepbuild) to set up your development environment. Make sure to install the Windows SDK *before* Visual Studio, update Windows through Windows Update, then install Visual Studio and all of its updates (this means SP1 for 2008).
 
