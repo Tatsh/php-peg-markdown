@@ -8,10 +8,8 @@ if test "$PHP_MARKDOWN" = "yes"; then
 dnl
 dnl Doesn't work, instead using LDFLAGS directly
 dnl PHP_EVAL_LIBLINE($GLIB_LIBS)
-  
-  PEG_MARKDOWN_SOURCES="peg-markdown/markdown_lib.c peg-markdown/markdown_output.c peg-markdown/markdown_parser.c"
 
-  LDFLAGS="$LDFLAGS $GLIB_LIBS"
+  LDFLAGS="$LDFLAGS $GLIB_LIBS -lpegmarkdown"
 
   PHP_NEW_EXTENSION(markdown, $PEG_MARKDOWN_SOURCES php_markdown.c, $ext_shared, , $GLIB_CFLAGS)
 fi

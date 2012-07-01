@@ -20,10 +20,10 @@
 #include "config.h"
 #endif
 
+#include <pegmarkdown.h>
+
 #include "php.h"
 #include "php_markdown.h"
-
-#include "peg-markdown/markdown_lib.h"
 
 const zend_function_entry markdown_functions[] = {
   PHP_FE(markdown_parse, NULL)
