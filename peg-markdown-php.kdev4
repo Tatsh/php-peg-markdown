@@ -1,3 +1,4 @@
 [Project]
 Manager=KDevGenericManager
 Name=php-peg-markdown
+VersionControl=kdevgit
