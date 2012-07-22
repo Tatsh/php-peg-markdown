@@ -23,6 +23,7 @@
 #include <pegmarkdown.h>
 
 #include "php.h"
+#include "ext/standard/info.h"
 #include "php_markdown.h"
 
 const zend_function_entry markdown_functions[] = {
@@ -127,7 +128,6 @@ PHP_FUNCTION(markdown_parse_file) {
   int output_format = 0;
   int len;
   long offset = -1;
-  long maxlen = PHP_STREAM_COPY_ALL;
   char *decoded;
 
   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|ll", &filename, &filename_len, &flags, &output_format) == FAILURE) {
@@ -135,7 +135,7 @@ PHP_FUNCTION(markdown_parse_file) {
   }
 
   output_format = get_valid_output_format(output_format);
-  stream = php_stream_open_wrapper_ex(filename, "rb", 0 | REPORT_ERRORS, NULL, NULL);
+  stream = php_stream_open_wrapper_ex(filename, "rb", ENFORCE_SAFE_MODE | REPORT_ERRORS, NULL, NULL);
 
   if (!stream) {
     RETURN_FALSE;
@@ -147,7 +147,11 @@ PHP_FUNCTION(markdown_parse_file) {
     RETURN_FALSE;
   }
 
-  if ((len = php_stream_copy_to_mem(stream, &contents, maxlen, 0)) > 0) {
+#ifdef IS_UNICODE
+  if ((len = php_stream_copy_to_mem(stream, (void **)&contents, PHP_STREAM_COPY_ALL, 0)) > 0) {
+#else
+  if ((len = php_stream_copy_to_mem(stream, &contents, PHP_STREAM_COPY_ALL, 0)) > 0) {
+#endif
     decoded = markdown_to_string(contents, flags, output_format);
     RETVAL_STRING(decoded, 1);
   }
@@ -161,3 +165,4 @@ PHP_FUNCTION(markdown_parse_file) {
   php_stream_close(stream);
 }
 /* }}} */
+
