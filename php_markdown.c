@@ -117,52 +117,100 @@ PHP_FUNCTION(markdown_parse) {
 }
 /* }}} */
 
-/* {{{ proto string markdown_parse_file(string filename [, int flags, int output_format ])
-   Convert Markdown file contents to string */
-PHP_FUNCTION(markdown_parse_file) {
+char *markdown_decode(char *filename, int flags, int output_format, int *return_length TSRMLS_DC) {
   php_stream *stream;
-  char *filename;
-  int filename_len;
-  char *contents;
-  int flags = 0;
-  int output_format = 0;
-  int len;
-  long offset = -1;
   char *decoded;
-
-  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|ll", &filename, &filename_len, &flags, &output_format) == FAILURE) {
-    RETURN_NULL();
-  }
-
+  int offset = -1;
+  char *contents;
+  int len;
+  char *return_value = NULL;
+  
   output_format = get_valid_output_format(output_format);
   stream = php_stream_open_wrapper_ex(filename, "rb", ENFORCE_SAFE_MODE | REPORT_ERRORS, NULL, NULL);
 
   if (!stream) {
-    RETURN_FALSE;
+    *return_length = 0;
+    return NULL;
   }
 
   if (offset > 0 && php_stream_seek(stream, offset, SEEK_SET) < 0) {
     php_error_docref(NULL TSRMLS_CC, E_WARNING, "Failed to seek position %ld in the stream", offset);
     php_stream_close(stream);
-    RETURN_FALSE;
+    *return_length = 0;
+    return NULL;
   }
 
 #ifdef IS_UNICODE
-  if ((len = php_stream_copy_to_mem(stream, (void **)&contents, PHP_STREAM_COPY_ALL, 0)) > 0) {
+  len = php_stream_copy_to_mem(stream, (void **)&contents, PHP_STREAM_COPY_ALL, 0);
 #else
-  if ((len = php_stream_copy_to_mem(stream, &contents, PHP_STREAM_COPY_ALL, 0)) > 0) {
+  len = php_stream_copy_to_mem(stream, &contents, PHP_STREAM_COPY_ALL, 0);
 #endif
-    decoded = markdown_to_string(contents, flags, output_format);
-    RETVAL_STRING(decoded, 1);
+
+  if (len) {
+    return_value = markdown_to_string(contents, flags, output_format);
+  }
+  else if (len == 0) {
+    return_value = "";
+  }
+
+  php_stream_close(stream);
+
+  *return_length = len;
+  return return_value;
+}
+
+/* {{{ proto string markdown_parse_file(string filename [, int flags, int output_format ])
+   Convert Markdown file contents to string */
+PHP_FUNCTION(markdown_parse_file) {
+  char *filename;
+  int filename_len;
+  int flags = 0;
+  int output_format = 0;
+  char *decoded;
+  int len;
+
+  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|ll", &filename, &filename_len, &flags, &output_format) == FAILURE) {
+    RETURN_NULL();
+  }
+
+  decoded = markdown_decode(filename, flags, output_format, &len TSRMLS_CC);
+
+  if (decoded == NULL) {
+    RETURN_NULL();
   }
   else if (len == 0) {
     RETVAL_EMPTY_STRING();
   }
   else {
-    RETVAL_FALSE;
+    RETVAL_STRING(decoded, 1);
   }
-
-  php_stream_close(stream);
 }
 /* }}} */
 
+/* {{{ proto string markdown_parse_file(string filename [, int flags, int output_format ])
+   Convert Markdown URL contents to string */
+PHP_FUNCTION(markdown_parse_url) {
+  char *filename;
+  int filename_len;
+  int flags = 0;
+  int output_format = 0;
+  char *decoded;
+  int len;
+
+  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|ll", &filename, &filename_len, &flags, &output_format) == FAILURE) {
+    RETURN_NULL();
+  }
+
+  decoded = markdown_decode(filename, flags, output_format, &len TSRMLS_CC);
+
+  if (decoded == NULL) {
+    RETURN_NULL();
+  }
+  else if (len == 0) {
+    RETVAL_EMPTY_STRING();
+  }
+  else {
+    RETVAL_STRING(decoded, 1);
+  }
+}
+/* }}} */
