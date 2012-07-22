@@ -29,6 +29,7 @@
 const zend_function_entry markdown_functions[] = {
   PHP_FE(markdown_parse, NULL)
   PHP_FE(markdown_parse_file, NULL)
+  PHP_FE(markdown_parse_url, NULL)
   PHP_FE_END
 };
 
